@@ -7,5 +7,6 @@ import java.util.*
 interface IdiomUseCase {
     fun findAllIdioms(): List<Idiom>
     fun findIdiomById(id: String): Optional<Idiom>
+    fun findTodaysIdiom(): Idiom
     fun save(command: CreateIdiomCommand): Idiom
 }

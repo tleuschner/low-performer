@@ -1,5 +1,6 @@
 package de.leuschner.low.perfomer.calendarbackend.controllers
 
+import de.leuschner.low.perfomer.calendarbackend.domain.entities.Idiom
 import de.leuschner.low.perfomer.calendarbackend.domain.repositories.*
 import de.leuschner.low.perfomer.calendarbackend.presentation.models.CreateIdiomRequest
 import io.restassured.RestAssured
@@ -76,15 +77,10 @@ class IdiomControllerTest {
     @Test
     fun testGetIdiomById() {
         // Arrange
-        val insertAuthorCommand = InsertAuthorCommand(name = "tim", created = LocalDateTime.now())
-        val author = authorRepository.save(insertAuthorCommand)
-        val saveIdiomCommand =
-            InsertIdiomCommand(content = "Du hast schon gelebt, entspann dich lieber!", UUID.fromString(author.id))
-        val savedIdiom = idiomRepository.save(saveIdiomCommand)
+        val savedIdiom = saveIdiom("tim", "Du hast schon gelebt, entspann dich lieber!")
 
         // Act
         given()
-            .contentType(ContentType.JSON)
             .`when`()
             .get("/idioms/${savedIdiom.id}")
             .then()
@@ -113,6 +109,29 @@ class IdiomControllerTest {
             // Assert
             .statusCode(HttpStatus.CREATED.value())
             .body("content", Matchers.equalTo("Du hast schon gelebt, entspann dich lieber!"))
+    }
+
+    @Test
+    fun getTodaysIdiom() {
+
+        val savedIdiom = saveIdiom("tim", "Du hast schon gelebt, entspann dich lieber!")
+        // Update in DB
+
+        given().`when`()
+            .get("/idioms/today")
+            .then()
+            .body("content", Matchers.equalTo("Du hast schon gelebt, entspann dich lieber!"))
+//            .body("used", Matchers.equalTo(0))
+//            .body("lastUsed", Matchers.equalTo(LocalDateTime.of(2024, 0, 5, 0, 5, 20, 34)))
+            .statusCode(HttpStatus.OK.value())
+    }
+
+    fun saveIdiom(authorName: String, idiomContent: String): Idiom {
+        val insertAuthorCommand = InsertAuthorCommand(name = authorName, created = LocalDateTime.now())
+        val author = authorRepository.save(insertAuthorCommand)
+        val saveIdiomCommand =
+            InsertIdiomCommand(content = idiomContent, UUID.fromString(author.id))
+        return idiomRepository.save(saveIdiomCommand)
     }
 
 }

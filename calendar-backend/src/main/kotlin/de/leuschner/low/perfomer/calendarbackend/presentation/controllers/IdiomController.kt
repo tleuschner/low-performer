@@ -10,6 +10,9 @@ class IdiomController(val idiomUseCase: IdiomUseCase) {
     @GetMapping("/idioms")
     fun getIdioms() = idiomUseCase.findAllIdioms()
 
+    @GetMapping("/idioms/today")
+    fun getTodaysIdiom() = idiomUseCase.findTodaysIdiom()
+
     @GetMapping("/idioms/{id}")
     fun getIdiomsById(@PathVariable id: String) = idiomUseCase.findIdiomById(id)
 
