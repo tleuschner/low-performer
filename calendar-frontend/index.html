@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Low Performer Calendar</title>
+    <script
+      src="https://unpkg.com/htmx.org@1.9.11"
+      integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/mustache@latest"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.11/dist/ext/client-side-templates.js"></script>
+  </head>
+  <body>
+    <div hx-ext="client-side-templates">
+      <button
+        hx-get="http://localhost:8080/authors"
+        mustache-array-template="authorlist"
+        hx-target="#authors"
+        hx-swap="innerHTML"
+        hx-trigger="click, load"
+      >
+        Load authors
+      </button>
+
+      <button
+        hx-get="http://localhost:8080/idioms"
+        mustache-array-template="idiomlist"
+        hx-target="#idioms"
+        hx-swap="innerHTML"
+        hx-trigger="click"
+      >
+        Load idioms
+      </button>
+
+      <h3>Spruch hinzufügen</h3>
+      <form hx-post="http://localhost:8080/idioms">
+        <input id="content" name="content" type="text" />
+        <div id="authors"></div>
+
+        <button type="submit">Submit</button>
+      </form>
+
+      <div id="idioms"></div>
+
+      <template id="idiomlist">
+        <ul>
+          {{#data}}
+          <li><strong>{{content}}</strong></li>
+          {{/data}}
+        </ul>
+      </template>
+
+      <template id="authorlist">
+        <select name="authorId">
+          {{#data}}
+          <option value="{{id}}"><strong>{{name}}</strong></option>
+          {{/data}}
+        </select>
+      </template>
+    </div>
+  </body>
+</html>

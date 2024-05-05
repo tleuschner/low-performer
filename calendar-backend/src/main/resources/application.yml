@@ -1,0 +1,29 @@
+spring:
+  sql:
+    init:
+      schema-locations: classpath:schema.sql
+      mode: always
+  application:
+    name: calendar-backend
+  datasource:
+    url: jdbc:postgresql://localhost:5432/low-performer
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test
+  sql:
+    init:
+      schema-locations: classpath:schema.sql
+      mode: always
+  application:
+    name: calendar-backend
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
